@@ -4,20 +4,18 @@ import PostsRoutes from "./posts/index.js";
 import UsersRoutes from "./users/index.js";
 import SearchRoutes from "./search/index.js";
 import DashboardRoutes from "./dashboard/index.js";
+import WalletsRoutes from "./wallets/index.js";
 import isAuth from "../middlewars/isAuth.js";
 import isAdminAuth from "../middlewars/isAdminAuth.js";
 
 const router = Router();
 
-try {
-  router
-    .use("/auth", AuthRoutes)
-    .use("/posts", PostsRoutes)
-    .use("/users", UsersRoutes)
-    .use("/search", SearchRoutes)
-    .use("/dashboard", isAuth, isAdminAuth, DashboardRoutes);
-} catch (e) {
-  throw new Error(e.message);
-}
+router
+  .use("/auth", AuthRoutes)
+  .use("/users", UsersRoutes)
+  .use("/posts", PostsRoutes)
+  .use("/search", SearchRoutes)
+  .use("/wallets", WalletsRoutes)
+  .use("/dashboard", isAuth, isAdminAuth, DashboardRoutes);
 
 export default router;

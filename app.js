@@ -4,9 +4,10 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import db from "./utils/db.js";
 import AppRoutes from "./routes/index.js";
-import { isAuthSocket } from "./middlewars/isAuth.js";
 import { Server } from "socket.io";
 import comments from "./socket/comments.js";
+import errorHandler from "./middlewars/errorHandler.js";
+import notFoundHandler from "./middlewars/notFoundHandler.js";
 
 dotenv.config();
 
@@ -19,16 +20,8 @@ app.use(bodyParser.json());
 
 app.use("/api", AppRoutes);
 
-app.use((err, req, res, next) => {
-  if (err.statusCode === 500) {
-    return res.status(500).json({ error: true, message: err.message });
-  }
-  return next();
-});
-
-app.use((req, res) => {
-  res.status(404).json({ message: "route not found!" });
-});
+app.use("*", notFoundHandler);
+app.use(errorHandler);
 
 try {
   await db();

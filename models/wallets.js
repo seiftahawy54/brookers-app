@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+export const transactionsTypes = ["withdraw", "deposit"];
+
 const WalletsSchema = new mongoose.Schema(
   {
     user: {
@@ -8,14 +10,30 @@ const WalletsSchema = new mongoose.Schema(
     },
     balance: {
       type: Number,
-      required: true,
       default: 0,
     },
     transactions: [
       {
-        transactionType: String,
-        enum: ["withdraw", "deposit"],
-        transactionDate: Date,
+        transactionType: {
+          type: String,
+          enum: transactionsTypes,
+          transactionDate: Date,
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          min: 0,
+        },
+        from: {
+          type: mongoose.Types.ObjectId,
+          ref: "user",
+        },
+        to: {
+          type: mongoose.Types.ObjectId,
+          ref: "user",
+        },
+        createdAt: { type: Date, default: Date.now },
       },
     ],
   },
