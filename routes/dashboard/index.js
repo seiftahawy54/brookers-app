@@ -17,6 +17,13 @@ usersRoutes.get(
   Controllers.DashboardControllers.UsersControllers.getAllUsers
 );
 
+usersRoutes.put(
+  "/upgradeUser/:id",
+  isAuth,
+  isAdminAuth,
+  Controllers.DashboardControllers.UsersControllers.putChangeUserType
+);
+
 usersRoutes.delete(
   "/:userId",
   isAuth,

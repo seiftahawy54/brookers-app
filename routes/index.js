@@ -6,6 +6,7 @@ import SearchRoutes from "./search/index.js";
 import DashboardRoutes from "./dashboard/index.js";
 import WalletsRoutes from "./wallets/index.js";
 import isAuth from "../middlewars/isAuth.js";
+import ChatsRoutes from "./chats/index.js";
 import isAdminAuth from "../middlewars/isAdminAuth.js";
 
 const router = Router();
@@ -16,6 +17,7 @@ router
   .use("/posts", PostsRoutes)
   .use("/search", SearchRoutes)
   .use("/wallets", WalletsRoutes)
+  .use("/chats", isAuth, ChatsRoutes)
   .use("/dashboard", isAuth, isAdminAuth, DashboardRoutes);
 
 export default router;

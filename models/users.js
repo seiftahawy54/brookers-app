@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+export const usersTypes = ["normal", "seller", "admin"];
+
 const UsersSchema = new mongoose.Schema(
   {
     fullname: {
@@ -39,7 +41,7 @@ const UsersSchema = new mongoose.Schema(
     },
     userType: {
       type: String,
-      enum: ["normal", "seller", "admin"],
+      enum: usersTypes,
       default: "normal",
     },
     chats: [{ type: mongoose.Types.ObjectId, ref: "Chat" }],

@@ -8,6 +8,7 @@ import { Server } from "socket.io";
 import comments from "./socket/comments.js";
 import errorHandler from "./middlewars/errorHandler.js";
 import notFoundHandler from "./middlewars/notFoundHandler.js";
+import chats from "./socket/chats.js";
 
 dotenv.config();
 
@@ -26,7 +27,7 @@ app.use(errorHandler);
 try {
   await db();
 
-  const server = app.listen(process.env.PORT, () => {
+  const server = app.listen(process.env.PORT || 8080, () => {
     console.log(`http://localhost:${process.env.PORT}`);
   });
 
@@ -37,6 +38,7 @@ try {
     console.log(`main connection`);
   });
   comments(io);
+  chats(io);
 } catch (e) {
   console.log(`connection error ${e}`);
 }
