@@ -48,7 +48,25 @@ const getAllPostsToReview = async (req, res, next) => {
   });
 };
 
+const deletePost = async (req, res, next) => {
+  const { id } = req.params;
+  if (!mongoose.isValidObjectId(id))
+    return res.status(400).json({
+      error: true,
+      message: constructError("post id", "Invalid post id"),
+    });
+  try {
+    const deletionResult = await Models.Posts.findByIdAndDelete(id);
+    return res
+      .status(200)
+      .json({ message: "Post deleted successfully", deletionResult });
+  } catch (e) {
+    next(e);
+  }
+};
+
 export default {
   getAllPostsToReview,
   putChangePostStatus,
+  deletePost,
 };

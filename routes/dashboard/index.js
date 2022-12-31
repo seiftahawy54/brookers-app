@@ -47,6 +47,11 @@ postsRoutes.put(
   Controllers.DashboardControllers.PostsControllers.putChangePostStatus
 );
 
+postsRoutes.delete(
+  "/:id",
+  Controllers.DashboardControllers.PostsControllers.deletePost
+);
+
 // Attaching to global dashboard routes
 globalDashboardRouter.use("/posts", postsRoutes);
 globalDashboardRouter.use("/users", usersRoutes);

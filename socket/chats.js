@@ -9,7 +9,6 @@ export default (io) => {
     if (!user) return;
 
     socket.on("sendMessage", async (chatData) => {
-      socket.emit("chats", chatData);
       try {
         if (
           !mongoose.isValidObjectId(chatData.otherUserId) ||
@@ -18,7 +17,14 @@ export default (io) => {
           console.log(chatData);
           return false;
         }
+      } catch (e) {
+        console.log(JSON.stringify(e));
+        return false;
+      }
+      socket.join(chatData.chatId);
+      socket.broadcast.to(chatData.otherUserId).emit(chatData);
 
+      try {
         const otherUser = await Models.Users.findById(chatData.otherUserId);
         const currentUser = await Models.Users.findById(user.id);
         const chatConversation = await Models.Chats.findById(chatData.chatId);
@@ -36,8 +42,7 @@ export default (io) => {
 
         await chatConversation.save();
       } catch (e) {
-        console.log(e);
-        return false;
+        console.log(JSON.stringify(e));
       }
     });
   });

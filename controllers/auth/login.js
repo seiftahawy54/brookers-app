@@ -19,7 +19,7 @@ export default async (req, res) => {
 
   const searchingUser = await Models.Users.findOne({ username }).lean();
 
-  if (isEmpty(searchingUser)) {
+  if (!searchingUser || isEmpty(searchingUser)) {
     return res.status(400).json({
       error: true,
       message: constructError("username", "No user with this username"),
