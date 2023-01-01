@@ -50,7 +50,7 @@ const postCreatePost = async (req, res, next) => {
 };
 
 const getAllPosts = async (req, res) => {
-  let allPosts = await Models.Posts.find({});
+  let allPosts = await Models.Posts.find({}).populate("seller");
   if (!allPosts) allPosts = [];
   return res.status(200).json({ posts: allPosts });
 };
