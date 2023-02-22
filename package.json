@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon app.js",
-    "debug": "nodemon --exec 'node --inspect app.js'",
+    "debug": "nodemon --inspect app.js",
     "start": "node app.js"
   },
   "dependencies": {

@@ -6,6 +6,23 @@ import { body } from "express-validator";
 const router = Router();
 
 //----------------------------
+// Normal personalized routes
+//----------------------------
+
+const personalRoutes = Router();
+
+personalRoutes
+  .put(
+    "/favouritePosts/:postId",
+    Controllers.UsersControllers.putAddPostToFavourites
+  )
+  .get("/favouritePosts", Controllers.UsersControllers.getAllFavouritePosts)
+  .delete(
+    "/deleteFavourite/:postId",
+    Controllers.UsersControllers.deleteFavouritePost
+  );
+
+//----------------------------
 // Settings Routes
 //----------------------------
 
@@ -49,6 +66,7 @@ settingsRoutes.put(
 //---------------------------
 // Global Users Routes
 //---------------------------
+router.use("/", personalRoutes);
 router.use("/settings", settingsRoutes);
 
 export default router;

@@ -6,43 +6,60 @@ export default (io) => {
   const chatsNsp = io.of("/sockets/chats");
   chatsNsp.on("connect", (socket, next) => {
     const user = isAuthSocket(socket, next);
-    if (!user) return;
+    try {
+      if (!user) {
+        return new Error("user is not valid!");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    socket.on("joinChat", (chatProps) => {
+      console.log(chatProps);
+      socket.join(chatProps.chatId);
+    });
 
     socket.on("sendMessage", async (chatData) => {
       try {
         if (
-          !mongoose.isValidObjectId(chatData.otherUserId) ||
-          !mongoose.isValidObjectId(chatData.chatId)
+          !mongoose.isValidObjectId(chatData.content.otherUserId) ||
+          !mongoose.isValidObjectId(chatData.content.chatId)
         ) {
           console.log(chatData);
           return false;
         }
       } catch (e) {
-        console.log(JSON.stringify(e));
-        return false;
+        throw new Error(e);
       }
-      socket.join(chatData.chatId);
-      socket.broadcast.to(chatData.otherUserId).emit(chatData);
 
       try {
-        const otherUser = await Models.Users.findById(chatData.otherUserId);
+        const otherUser = await Models.Users.findById(
+          chatData.content.otherUserId
+        );
         const currentUser = await Models.Users.findById(user.id);
-        const chatConversation = await Models.Chats.findById(chatData.chatId);
+        const chatConversation = await Models.Chats.findById(
+          chatData.content.chatId
+        );
 
-        if (!otherUser || !currentUser || !chatConversation) return false;
+        if (!otherUser || !currentUser || !chatConversation) {
+          return new Error("Some user is not found!");
+        }
 
         chatConversation.messages = [
           ...chatConversation.messages,
           {
-            text: chatData.message,
+            text: chatData.content.message,
             sender: currentUser._id,
             receiver: otherUser._id,
           },
         ];
 
+        socket.to(chatData.content.chatId).emit("sendMessage", chatData);
+
         await chatConversation.save();
       } catch (e) {
         console.log(JSON.stringify(e));
+        throw new Error(e);
       }
     });
   });

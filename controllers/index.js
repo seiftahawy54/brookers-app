@@ -5,6 +5,7 @@ import SearchControllers from "./search/index.js";
 import DashboardControllers from "./dashboard/index.js";
 import WalletsControllers from "./wallets/index.js";
 import ChatControllers from "./chats/index.js";
+import ContactControllers from "./contact/index.js";
 
 export default {
   AuthControllers,
@@ -14,4 +15,5 @@ export default {
   DashboardControllers,
   WalletsControllers,
   ChatControllers,
+  ContactControllers,
 };

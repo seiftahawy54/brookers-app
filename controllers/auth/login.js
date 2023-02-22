@@ -38,11 +38,9 @@ export default async (req, res) => {
     });
   }
 
-  let jwtOptions = {};
-
-  if (process.env.NODE_ENV === "development") {
-    jwtOptions.expiresIn = "1D";
-  }
+  let jwtOptions = {
+    expiresIn: "1D",
+  };
 
   const token = jwt.sign(
     {

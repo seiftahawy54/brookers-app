@@ -2,22 +2,18 @@ import mongoose from "mongoose";
 import { constructError } from "../../utils/helpers.js";
 import Models from "../../models/index.js";
 
-const getChatData = async (req, res, next) => {
-  const { chatId } = req.params;
+const getChatForUser = async (req, res, next) => {
+  const { id } = req.user;
+  const chat = await Models.Chats.find({
+    $or: [{ firstUser: id }, { secondUser: id }],
+  })
+    .populate("firstUser secondUser")
+    .lean();
 
-  if (!mongoose.isValidObjectId(userId))
-    return res.status(400).json({
-      error: true,
-      message: constructError("userId", "Invalid userId"),
-    });
-
-  if (!mongoose.isValidObjectId(chatId))
-    return res.status(400).json({
-      error: true,
-      message: constructError("chatId", "Invalid chatId"),
-    });
-
-  const chat = await Models.Chats.find({});
+  if (!chat) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  return res.status(200).json({ chat });
 };
 
 const postCreateChat = async (req, res, next) => {
@@ -29,7 +25,13 @@ const postCreateChat = async (req, res, next) => {
       message: constructError("other user id", "Invalid other user id"),
     });
 
-  const otherUser = await Models.Users.findById(otherUserId);
+  if (otherUserId === req.user.id) {
+    return res.status(400).json({
+      message: "Cannot create chat for the same user!",
+    });
+  }
+
+  const otherUser = await Models.Users.findById(otherUserId).lean();
 
   if (!otherUser)
     return res.status(404).json({
@@ -64,13 +66,17 @@ const postCreateChat = async (req, res, next) => {
     });
     await chat.save();
 
+    const addedChat = await Models.Chats.findById(chat._id).populate(
+      "firstUser secondUser"
+    );
+
     return res.status(200).json({
       message: "Chat created successfully",
-      chat,
+      chat: addedChat,
     });
   } catch (e) {
     next(e);
   }
 };
 
-export default { postCreateChat, getChatData };
+export default { postCreateChat, getChatForUser };

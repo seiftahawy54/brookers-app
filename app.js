@@ -9,6 +9,7 @@ import comments from "./socket/comments.js";
 import errorHandler from "./middlewars/errorHandler.js";
 import notFoundHandler from "./middlewars/notFoundHandler.js";
 import chats from "./socket/chats.js";
+import path from "path";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use("/uploads", express.static(path.resolve("uploads")));
 
 app.use("/api", AppRoutes);
 
@@ -31,10 +33,14 @@ try {
     console.log(`http://localhost:${process.env.PORT}`);
   });
 
-  const io = new Server(server);
+  const io = new Server(server, {
+    cors: {
+      origin: "*",
+    },
+  });
 
   // io.use(isAuthSocket);
-  io.on("connection", (socket) => {
+  io.on("connect", (socket) => {
     console.log(`main connection`);
   });
   comments(io);

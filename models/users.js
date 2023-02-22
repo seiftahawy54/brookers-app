@@ -44,6 +44,12 @@ const UsersSchema = new mongoose.Schema(
       enum: usersTypes,
       default: "normal",
     },
+    favouritePosts: [
+      {
+        type: String,
+        ref: "post",
+      },
+    ],
     chats: [{ type: mongoose.Types.ObjectId, ref: "Chat" }],
   },
   { timestamps: true }
