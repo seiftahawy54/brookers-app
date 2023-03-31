@@ -22,4 +22,5 @@ export default Router()
     body("price").exists().trim().isString().isLength({ min: 2, max: 12 }),
     body("flatSpecs").exists().isObject(),
     Controllers.PostsControllers.postCreatePost
-  );
+  )
+  .get("/:postId", Controllers.PostsControllers.getSinglePost);

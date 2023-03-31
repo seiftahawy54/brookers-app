@@ -51,13 +51,20 @@ const postCreatePost = async (req, res, next) => {
 
 const getAllPosts = async (req, res) => {
   let allPosts = await Models.Posts.find({ status: "accepted" }).populate(
-    "seller"
+    "seller",
   );
   if (!allPosts) allPosts = [];
   return res.status(200).json({ posts: allPosts });
 };
 
+const getSinglePost = async (req, res) => {
+  const { postId } = req.params;
+  const post = await Models.Posts.findById(postId);
+  return res.status(200).json({ post });
+};
+
 export default {
   getAllPosts,
   postCreatePost,
+  getSinglePost
 };
