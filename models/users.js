@@ -51,6 +51,10 @@ const UsersSchema = new mongoose.Schema(
       },
     ],
     chats: [{ type: mongoose.Types.ObjectId, ref: "Chat" }],
+    avatar: {
+      type: String,
+      required: false,
+    }
   },
   { timestamps: true }
 );

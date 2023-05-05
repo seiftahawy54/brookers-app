@@ -2,6 +2,7 @@ import { Router } from "express";
 import Controllers from "../../controllers/index.js";
 import isAuth from "../../middlewars/isAuth.js";
 import { body } from "express-validator";
+import upload from "../../middlewars/upload.js";
 
 const router = Router();
 
@@ -14,12 +15,17 @@ const personalRoutes = Router();
 personalRoutes
   .put(
     "/favouritePosts/:postId",
-    Controllers.UsersControllers.putAddPostToFavourites
+    Controllers.UsersControllers.putAddPostToFavourites,
+  )
+  .put(
+    "/profileImg",
+    upload.single("image"),
+    Controllers.UsersControllers.putUserImg,
   )
   .get("/favouritePosts", Controllers.UsersControllers.getAllFavouritePosts)
   .delete(
     "/deleteFavourite/:postId",
-    Controllers.UsersControllers.deleteFavouritePost
+    Controllers.UsersControllers.deleteFavouritePost,
   );
 
 //----------------------------
@@ -31,7 +37,7 @@ const settingsRoutes = Router();
 settingsRoutes.get(
   "/profile",
   isAuth,
-  Controllers.UsersControllers.getUserData
+  Controllers.UsersControllers.getUserData,
 );
 
 settingsRoutes.put(
@@ -60,7 +66,7 @@ settingsRoutes.put(
       .isLength({ min: 3, max: 30 }),
     body("email").optional({ nullable: true }).trim().isString().isEmail(),
   ],
-  Controllers.UsersControllers.putUpdateUserData
+  Controllers.UsersControllers.putUpdateUserData,
 );
 
 //---------------------------

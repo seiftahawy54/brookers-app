@@ -63,7 +63,7 @@ const putAddPostToFavourites = async (req, res, next) => {
       {
         _id: id,
       },
-      { $addToSet: { favouritePosts: postId } }
+      { $addToSet: { favouritePosts: postId } },
     );
 
     return res
@@ -105,7 +105,7 @@ const deleteFavouritePost = async (req, res, next) => {
       {
         _id: id,
       },
-      { $pull: { favouritePosts: postId } }
+      { $pull: { favouritePosts: postId } },
     );
 
     return res
@@ -116,10 +116,24 @@ const deleteFavouritePost = async (req, res, next) => {
   }
 };
 
+const putUserImg = async (req, res, next) => {
+  const avatar = req.file.originalname;
+  const user = await Models.Users.findById(req.user.id);
+
+  if (!user)
+    return res.status(404).json({ message: "User not found, please login" });
+
+  user.avatar = avatar;
+  await user.save();
+
+  return res.status(200).json({ message: "Image saved successfully" });
+};
+
 export default {
   getUserData,
   putUpdateUserData,
   putAddPostToFavourites,
   getAllFavouritePosts,
   deleteFavouritePost,
+  putUserImg,
 };
