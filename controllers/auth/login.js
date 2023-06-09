@@ -38,10 +38,6 @@ export default async (req, res) => {
     });
   }
 
-  let jwtOptions = {
-    expiresIn: "1D",
-  };
-
   const token = jwt.sign(
     {
       id: searchingUser._id.toString(),
@@ -50,7 +46,6 @@ export default async (req, res) => {
       role: searchingUser.userType,
     },
     process.env.TOKEN_SECRET,
-    jwtOptions
   );
 
   req.user = searchingUser;

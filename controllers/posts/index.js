@@ -17,6 +17,7 @@ const postCreatePost = async (req, res, next) => {
   const specsSchema = await schema.validate(flatSpecs);
   const expressErrors = await validationResult(req);
 
+  console.log(specsSchema)
   if (specsSchema?.error) {
     return res.status(400).json({
       error: true,

@@ -12,7 +12,28 @@ const getUserData = async (req, res) => {
 
     const user = await Models.Users.findOne({
         _id: mongoose.Types.ObjectId(id),
-    });
+    })
+        .populate([{
+            path: "chats",
+            populate: 'firstUser secondUser',
+            model: Models.Chats
+        },
+            {
+                path: 'favouritePosts',
+                model: Models.Posts,
+                populate: [
+                    {
+                        path: "seller",
+                        populate: [
+                            {
+                                path: "chats",
+                                populate: 'firstUser secondUser',
+                                model: Models.Chats
+                            }
+                        ]
+                    },
+                ]
+            }]);
 
     if (!user) return res.status(404).json({user: {}});
 

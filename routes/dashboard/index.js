@@ -41,6 +41,8 @@ postsRoutes.get(
   Controllers.DashboardControllers.PostsControllers.getAllPostsToReview
 );
 
+postsRoutes.get('/', Controllers.DashboardControllers.PostsControllers.getAllPosts)
+
 postsRoutes.put(
   "/updateStatus/:postId",
   body("newStatus").exists().trim().isString(),
