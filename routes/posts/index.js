@@ -23,4 +23,19 @@ export default Router()
     body("flatSpecs").exists().isObject(),
     Controllers.PostsControllers.postCreatePost
   )
-  .get("/:postId", Controllers.PostsControllers.getSinglePost);
+  .get("/:postId", Controllers.PostsControllers.getSinglePost)
+    .put('/:postId',
+        isAuth,
+        upload.fields([
+            {
+                name: "mainImg",
+                maxCount: "1",
+            },
+            {
+                name: "images",
+            },
+        ]),
+        body("title").exists().trim().isString().isLength({ min: 15, max: 60 }),
+        body("price").exists().trim().isString().isLength({ min: 2, max: 12 }),
+        body("flatSpecs").exists().isObject(),
+        Controllers.PostsControllers.putEditPost);
